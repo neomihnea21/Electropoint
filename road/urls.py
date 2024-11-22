@@ -13,5 +13,7 @@ urlpatterns = [
     path("nume_corect/<str:nume>", views.numeCorecte),
     path("subsir/<str:tokeni>", views.cauta_subsir),
     path("operatii", views.black_ops),
-    path("entrance", views.scriePiese),
+    path("contact", views.scriePiese, name='sent'),
+    path("create-computer", views.showComputer),
+    path("shop", views.computer_list),
 ]

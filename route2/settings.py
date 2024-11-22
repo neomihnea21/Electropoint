@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'road.apps.RoadConfig', #it's weird, but this app was once called road, so the config class is unchanged
+    'road.apps.RoadConfig', 
 ]
 
 MIDDLEWARE = [
@@ -82,7 +82,7 @@ DATABASES = {
         },
         'NAME': 'postgres',   # numele bazei de date
         'USER': 'mihnea3',      # username pt conexiunea la baza de date
-        'PASSWORD': 'dianazoll',
+        'PASSWORD': 'dianazoll', #nu stiu cum sa pun parola sa nu fie in plaintext in cod
         'HOST': 'localhost',  # sau IP-ul serverului
         'PORT': '9320',       # portul implicit pentru PostgreSQL
     }
@@ -129,3 +129,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL='road.customUser'

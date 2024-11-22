@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.functions import Now
 from django.utils import timezone
-
+from django.contrib.auth.models import AbstractUser
 import uuid
 
 
@@ -64,3 +64,13 @@ class PlacaGrafica(models.Model):
     def __str__(self):
         return f"Placa Grafica {self.id}, Cores: {self.cores}, Pret: {self.pret}"
 # Create your models here.
+
+class CustomUser(AbstractUser):
+    telefon = models.CharField(max_length=15, blank=True)
+    zipcode = models.CharField(max_length=6, blank=True)
+    oras=models.CharField(max_length=30, blank=True)
+    strada=models.CharField(max_length=50, blank=True)
+    nr=models.PositiveIntegerField(default=1) #e un numar de casa, sau o cladire
+    stay_logged_in = models.BooleanField(
+        blank=True
+    )

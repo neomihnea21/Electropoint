@@ -1,0 +1,12 @@
+<html>
+<head>
+<title> Lista produse </title>
+</head>
+<body>
+    <h1> Calculatoare </h1>
+    {% for comp in computers%}
+     <div> {{comp.pret}}</div>
+     <div> {{comp.descriere}}</div>
+    {% endfor %}
+</body>
+</html>

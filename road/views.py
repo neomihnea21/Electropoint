@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .forms import ContactForm, ComputerForm, CustomUserCreationForm
+from .models import Calculator
 import re
+import time
+import json
 def afisare_statica(request):
     return HttpResponse("Pagina de cale fixa")
 def afisare_dinamica(request, no, address, road):
@@ -63,5 +67,61 @@ def cauta_subsir(request, tokeni):
         return HttpResponse("String necorespunzator")
 def black_ops(request):
     return HttpResponse("e")
+#FETCHING ALL RECORDS, FOR SHOPPING THEM
+def computer_list(request):
+   computers=Calculator.objects.all()
+   return render(request, "forsale.html")#TODO populeaza nitel baza de date
+#COMPLAINT FORM, extracted as .json to server
 def scriePiese(request):
-    return HttpResponse("e") #TODO scrie o pagina HTML cum se cuvine aici
+    if (request.method=='POST'):
+       form=ContactForm(request.POST)
+       if(form.is_valid()):
+          nume=form.cleaned_data['nume']
+          email=form.cleaned_data['email']
+          mesaj=form.cleaned_data['mesaj']
+          filtered_data=form.cleaned_data.pop()
+          json_data = json.dumps(form.cleaned_data, indent=4) # e o lista
+          nume_log="user"+str(int(time.time()))+".json"
+          response = HttpResponse(json_data, content_type="application/json")
+          response['Content-Disposition'] = 'attachment; filename='+nume_log
+          return response
+    else:
+       form=ContactForm()
+    return render(request, "contact.html", {'form': form})
+#INSERT DATA
+def showComputer(request):
+    if(request.method=='POST'):
+        form=ComputerForm(request.POST) # formul are metoda de POST
+        if(form.is_valid()):
+            form.save() # nu va fi intors ca JSON, ca n-are de ce, e un produs
+            return redirect('sent')
+    else:
+        form=ComputerForm()
+    return render(request, "computer.html", {'form': form}) #TODO creeaza inca un template
+#STUFF RELATED TO LOGIN/SIGNUP
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'signup.html', {'form': form})
+def custom_login_view(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(data=request.POST, request=request)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            if not form.cleaned_data.get('stay_logged_in'):
+                request.session.set_expiry(0)
+            else:
+                request.session.set_expiry(86400)  # 24h            
+            return redirect('sent')
+    else:
+        form = CustomAuthenticationForm()
+
+    return render(request, 'login.html', {'form': form})
+def sent(request):
+    return HttpResponse("Sergio")
